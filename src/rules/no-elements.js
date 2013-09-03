@@ -1,13 +1,13 @@
 /*global CSSLint*/
 /*
- * Rule: Allow a maximum of 3 class selectors
+ * Rule: Disallow selecting on elements
  */
 CSSLint.addRule({
 
     //rule information
-    id: "max-3-class-selectors",
-    name: "Allow a maximum of 3 class selectors",
-    desc: "Allow a maximum of 3 class selectors due to performance",
+    id: "element-selectors",
+    name: "Disallow element selectors",
+    desc: "Disallow element selectors",
     browsers: "All",
 
     //initialization
@@ -17,23 +17,15 @@ CSSLint.addRule({
             var selectors = event.selectors,
                 selector,
                 part,
-                classCount,
                 i,
-                j,
-                partCount = 0;
+                j;
 
             for (i=0; i < selectors.length; i++){
                 selector = selectors[i];
                 for (j=0; j < selector.parts.length; j++){
                     part = selector.parts[j];
-
-                    if (part.type == parser.SELECTOR_PART_TYPE){
-                        classCount = 0;
-
-                        partCount++;
-                        if(partCount > 3){
-                            reporter.report("Exceeding 3 classes:" + partCount, part.line, part.col, rule);
-                        }
+                    if(part.elementName){
+                        reporter.report("Do not select on HTML elements", part.line, part.col, rule);
                     }
                 }
             }
