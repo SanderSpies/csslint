@@ -20,7 +20,7 @@ CSSLint.addRule({
                 classCount,
                 i,
                 j,
-                partCount = 0;
+                k;
 
             for (i=0; i < selectors.length; i++){
                 selector = selectors[i];
@@ -30,9 +30,17 @@ CSSLint.addRule({
                     if (part.type == parser.SELECTOR_PART_TYPE){
                         classCount = 0;
 
-                        partCount++;
-                        if(partCount > 3){
-                            reporter.report("Exceeding 3 classes:" + partCount, part.line, part.col, rule);
+                        for (k=0; k < part.modifiers.length; k++){
+                            modifier = part.modifiers[k];
+                            if (modifier.type == "class"){
+                                classCount++;
+                                break;
+                            }
+                        }
+
+                        classCount++;
+                        if(classCount > 3){
+                            reporter.report("Exceeding 3 classes:" + classCount, part.line, part.col, rule);
                         }
                     }
                 }
